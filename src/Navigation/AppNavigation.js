@@ -1,73 +1,113 @@
 import React from 'react';
-import { Button, Text, View, TouchableOpacity, StyleSheet, ImagePickerIOS } from 'react-native';
-//import all the basic component we have used
-//import Ionicons to show the icon for bottom options
-import getSlideFromRightTransition from './SlideFromRightTransition';
+import { NavigationContainer } from '@react-navigation/native';
+import { createStackNavigator } from '@react-navigation/stack';
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 
-import ScreenKey from './ScreenKey'
-
-//For React Navigation 4+
-import { createAppContainer, createSwitchNavigator } from 'react-navigation';
-import CardStackStyleInterpolator from 'react-navigation-stack/src/views/StackView/StackViewStyleInterpolator';
-import { createBottomTabNavigator } from 'react-navigation-tabs';
-import { createStackNavigator } from 'react-navigation-stack';
-import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
-import { Transition } from 'react-native-reanimated';
-
-// Import Screen
+import HomeScreen from '../Screen/HomeScreen'
 import SplashScreen from '../Screen/SplashScreen/index'
-import HomeTab from '../Screen/HomeScreen'
-import CategoryTab from '../Screen/CategoryScreen'
-import SearchingTab from '../Screen/SearchingScreen'
-import UserTab from '../Screen/UserScreen'
+import SearchingScreen from '../Screen/SearchingScreen'
+import CateroryScreen from '../Screen/CategoryScreen'
+import UserScreen from '../Screen/UserScreen'
+
+// IMport Icon
+import Icon from 'react-native-vector-icons/FontAwesome';
+import { SafeAreaView } from 'react-native';
 
 
-
-const MainTab = createBottomTabNavigator(
-    {
-        [ScreenKey.TAB_BOTTOM_HOME]: {
-            screen: HomeTab
-        },
-        [ScreenKey.TAB_BOTTOM_CATEGORY]: {
-            screen: CategoryTab
-        },
-        [ScreenKey.TAB_BOTTOM_SEARCH]: {
-            screen: SearchingTab
-        },
-        [ScreenKey.TAB_BOTTOM_USER]: {
-            screen: UserTab
-        },
-    },
-    {
-        initialRouteName: ScreenKey.TAB_BOTTOM_HOME,
-        transitionConfig: getSlideFromRightTransition,
-    },
-);
-
-const SwitchNavigator = createAnimatedSwitchNavigator(
-    {
-        Splash: SplashScreen,
-        // Auth: GuestStack,
-        App: MainTab
-    },
-    {
-        headerMode: 'none',
-        initialRouteName: "App"
-    },
-    {
-        // The previous screen will slide to the bottom while the next screen will fade in
-        transition: (
-            <Transition.Together>
-                <Transition.Out
-                    type="slide-bottom"
-                    durationMs={400}
-                    interpolation="easeIn"
-                />
-                <Transition.In type="fade" durationMs={500} />
-            </Transition.Together>
-        ),
-    }
-)
+const Stack = createStackNavigator();
+const Tab = createBottomTabNavigator();
 
 
-export default SwitchNavigator;
+const HomeStack = () => {
+    return (
+        <Stack.Navigator
+            headerMode="none"
+        >
+            <Stack.Screen name="Home" component={HomeScreen} />
+            <Stack.Screen name="Notifications" component={SplashScreen} />
+        </Stack.Navigator>
+    )
+}
+const SearchingStack = () => {
+    return (
+        <Stack.Navigator
+            headerMode="none"
+        >
+            <Stack.Screen name="Searching" component={SearchingScreen} />
+        </Stack.Navigator>
+    )
+}
+const CateroryStack = () => {
+    return (
+        <Stack.Navigator
+            headerMode="none"
+        >
+            <Stack.Screen name="Caterory" component={CateroryScreen} />
+        </Stack.Navigator>
+    )
+}
+const UserStack = () => {
+    return (
+        <Stack.Navigator
+            headerMode="none"
+        >
+            <Stack.Screen name="User" component={UserScreen} />
+        </Stack.Navigator>
+    )
+}
+
+const AppContainer = () => {
+    return (
+            <NavigationContainer>
+                <Tab.Navigator
+                    tabBarOptions={{
+                        activeTintColor: '#33AB43',
+                    }}
+                    initialRouteName={'Home'}>
+
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: 'Trang chủ',
+                            tabBarIcon: ({ color, size }) => (
+                                <Icon name="home" color={color} size={size} />
+                            ),
+                        }}
+                        name="Home"
+                        component={HomeStack} />
+
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: 'Tìm kiếm',
+                            tabBarIcon: ({ color, size }) => (
+                                <Icon name="search" color={color} size={size} />
+                            ),
+                        }}
+                        name="Searching"
+                        component={SearchingStack} />
+
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: 'Danh mục',
+                            tabBarIcon: ({ color, size }) => (
+                                <Icon name="th-list" color={color} size={size} />
+                            ),
+                        }}
+                        name="Caterory"
+                        component={CateroryStack} />
+
+                    <Tab.Screen
+                        options={{
+                            tabBarLabel: 'Tài khoản',
+                            tabBarIcon: ({ color, size }) => (
+                                <Icon name="user-circle" color={color} size={size} />
+                            ),
+                        }}
+                        name="User"
+                        component={UserStack} />
+
+                </Tab.Navigator>
+            </NavigationContainer>
+    )
+}
+
+export default AppContainer
